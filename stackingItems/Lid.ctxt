@@ -1,0 +1,35 @@
+#BlueJ class context
+comment0.target=Lid
+comment0.text=\r\n\ Representa\ una\ tapa\ en\ el\ simulador\ de\ torre\ de\ apilamiento.\r\n\ Cada\ tapa\ tiene\ el\ mismo\ ancho\ que\ su\ taza\ correspondiente\ y\ mide\ 1\ cm\ de\ alto.\r\n\r\n\ @author\ AndresMora-DanielCamacho\r\n\ @version\ 3.0\r\n
+comment1.params=number
+comment1.target=Lid(int)
+comment1.text=\r\n\ Crea\ una\ tapa\ con\ el\ n\u00FAmero\ dado.\r\n\ @param\ number\ n\u00FAmero\ de\ la\ tapa\ (>\=\ 1)\r\n
+comment10.params=
+comment10.target=void\ draw()
+comment11.params=
+comment11.target=void\ erase()
+comment2.params=
+comment2.target=int\ getNumber()
+comment2.text=@return\ n\u00FAmero\ de\ la\ tapa
+comment3.params=
+comment3.target=int\ getHeightCm()
+comment3.text=@return\ altura\ en\ cm\ (siempre\ 1)
+comment4.params=
+comment4.target=int\ getWidthCm()
+comment4.text=\r\n\ Ancho\ de\ la\ tapa\ en\ cm\:\ igual\ que\ la\ taza\ del\ mismo\ n\u00FAmero\ (2*i\ cm).\r\n\ @return\ ancho\ en\ cm\r\n
+comment5.params=
+comment5.target=int\ getWidthPx()
+comment5.text=\r\n\ Ancho\ de\ la\ tapa\ en\ p\u00EDxeles.\r\n\ @return\ ancho\ en\ p\u00EDxeles\r\n
+comment6.params=
+comment6.target=java.lang.String\ getColor()
+comment6.text=@return\ color\ de\ la\ tapa
+comment7.params=x\ y
+comment7.target=void\ moveTo(int,\ int)
+comment7.text=\r\n\ Mueve\ la\ tapa\ a\ la\ posici\u00F3n\ dada.\r\n\ @param\ x\ posici\u00F3n\ x\ en\ p\u00EDxeles\r\n\ @param\ y\ posici\u00F3n\ y\ en\ p\u00EDxeles\r\n
+comment8.params=
+comment8.target=void\ makeVisible()
+comment8.text=Hace\ visible\ la\ tapa.
+comment9.params=
+comment9.target=void\ makeInvisible()
+comment9.text=Hace\ invisible\ la\ tapa.
+numComments=12

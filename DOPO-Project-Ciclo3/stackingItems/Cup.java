@@ -32,26 +32,39 @@ public class Cup {
     private int number;
     private String color;
     private boolean isVisible;
+    private boolean upsideDown;
     private int xPosition;
     private int yPosition;
 
     /**
-     * Crea una taza con el número dado.
+     * Crea una taza con el número dado, orientación normal (U).
      * @param number número de la taza (>= 1)
      */
     public Cup(int number) {
-        this.number    = number;
-        this.color     = COLORS[(number - 1) % COLORS.length];
-        this.isVisible = false;
-        this.xPosition = -2000;
-        this.yPosition = -2000;
+        this.number     = number;
+        this.color      = COLORS[(number - 1) % COLORS.length];
+        this.isVisible  = false;
+        this.upsideDown = false;
+        this.xPosition  = -2000;
+        this.yPosition  = -2000;
     }
+
+    /**
+     * Voltea la orientación de la copa (U ↔ ∩).
+     */
+    public void flip() {
+        upsideDown = !upsideDown;
+        if (isVisible) { erase(); draw(); }
+    }
+
+    /** @return true si la copa está boca abajo */
+    public boolean isUpsideDown() { return upsideDown; }
 
     /** @return número de la taza */
     public int getNumber() { return number; }
 
     /**
-     * Altura de la taza en centímetros: 2*i - 1.
+     * Altura de la taza en centímetros: i cm.
      * @return altura en cm
      */
     public int getHeightCm() { return 2 * number - 1; }
@@ -96,9 +109,8 @@ public class Cup {
     }
 
     /**
-     * Forma U: paredes izquierda + base + pared derecha, interior hueco.
-     * El hueco interior tiene ancho = ancho_exterior - 2*WALL,
-     * lo que garantiza que la copa i-1 quepa dentro de la copa i.
+     * Forma U normal: paredes + base abajo, abierto arriba.
+     * Forma ∩ invertida: paredes + base arriba, abierto abajo.
      */
     private Path2D buildShape() {
         int x = xPosition;
@@ -107,16 +119,27 @@ public class Cup {
         int h = getHeightPx();
 
         Path2D.Float path = new Path2D.Float();
-        // Exterior horario
-        path.moveTo(x,         y);
-        path.lineTo(x,         y + h);
-        path.lineTo(x + w,     y + h);
-        path.lineTo(x + w,     y);
-        // Interior antihorario (crea el hueco)
-        path.lineTo(x + w - WALL, y);
-        path.lineTo(x + w - WALL, y + h - WALL);
-        path.lineTo(x + WALL,     y + h - WALL);
-        path.lineTo(x + WALL,     y);
+        if (!upsideDown) {
+            // Forma U: base abajo
+            path.moveTo(x,         y);
+            path.lineTo(x,         y + h);
+            path.lineTo(x + w,     y + h);
+            path.lineTo(x + w,     y);
+            path.lineTo(x + w - WALL, y);
+            path.lineTo(x + w - WALL, y + h - WALL);
+            path.lineTo(x + WALL,     y + h - WALL);
+            path.lineTo(x + WALL,     y);
+        } else {
+            // Forma ∩: base arriba
+            path.moveTo(x,         y + h);
+            path.lineTo(x,         y);
+            path.lineTo(x + w,     y);
+            path.lineTo(x + w,     y + h);
+            path.lineTo(x + w - WALL, y + h);
+            path.lineTo(x + w - WALL, y + WALL);
+            path.lineTo(x + WALL,     y + WALL);
+            path.lineTo(x + WALL,     y + h);
+        }
         path.closePath();
         return path;
     }

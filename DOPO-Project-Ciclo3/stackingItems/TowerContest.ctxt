@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=TowerContest
+comment0.text=\r\n\ Resuelve\ y\ simula\ el\ problema\ "Stacking\ Cups"\ del\r\n\ 49\u00B0\ Campeonato\ Mundial\ ICPC\ (Problema\ J,\ Bak\u00FA\ 2025).\r\n\r\n\ ALGORITMO\ \u2014\ solve()\:\r\n\ Altura\ m\u00EDnima\ \=\ 2n-1\ (todas\ dentro\ de\ la\ copa\ n).\r\n\ Altura\ m\u00E1xima\ \=\ n\u00B2\ (todas\ contribuyen\ su\ altura).\r\n\ Para\ h\ en\ [2n-1,\ n\u00B2]\:\ deficit\ \=\ n\u00B2\ -\ h.\ Greedy\ de\ mayor\ a\ menor\:\r\n\ si\ (2k-1)\ <\=\ deficit,\ ocultar\ copa\ k\ (va\ despu\u00E9s\ de\ n,\ contribuye\ 0).\r\n\ Las\ copas\ visibles\ van\ antes\ de\ n\ en\ orden\ creciente.\r\n\r\n\ solve.\ La\ entrada\ y\ la\ salida\ corresponden\ a\ lo\ definido\ en\ el\ problema\ de\ la\ marat\u00F3n.\r\n\ simulate.\ La\ entrada\ corresponde\ a\ lo\ definido\ en\ el\ problema\ de\ la\ marat\u00F3n.\ La\ salida\ es\r\n\ la\ imagen\ de\ la\ soluci\u00F3n,\ si\ existe\ y\ es\ posible\ graficarla;\ en\ caso\ contrario,\ presenta\r\n\ un\ mensaje\ indic\u00E1ndolo.\r\n\r\n\ @author\ AndresMora-DanielCamacho\r\n\ @version\ 1.0\r\n
+comment1.params=n\ h
+comment1.target=java.lang.String\ solve(int,\ long)
+comment1.text=\r\n\ Resuelve\ el\ problema\:\ dado\ n\ copas\ y\ altura\ objetivo\ h,\r\n\ retorna\ las\ alturas\ en\ orden\ de\ colocaci\u00F3n\ separadas\ por\ espacio,\r\n\ o\ "impossible"\ si\ no\ es\ factible.\r\n\r\n\ @param\ n\ n\u00FAmero\ de\ copas\ (copas\ 1..n\ con\ alturas\ 1,3,5,...,2n-1)\r\n\ @param\ h\ altura\ objetivo\ deseada\r\n\ @return\ alturas\ separadas\ por\ espacio\ en\ orden\ de\ colocaci\u00F3n,\ o\ "impossible"\r\n
+comment2.params=n\ h
+comment2.target=void\ simulate(int,\ int)
+comment2.text=\r\n\ Simula\ visualmente\ la\ soluci\u00F3n\ usando\ la\ clase\ Tower.\r\n\ Si\ no\ existe\ soluci\u00F3n,\ muestra\ un\ mensaje.\r\n\ La\ clase\ Tower\ se\ usa\ solo\ para\ simular,\ nunca\ para\ resolver.\r\n\r\n\ @param\ n\ n\u00FAmero\ de\ copas\r\n\ @param\ h\ altura\ objetivo\r\n
+numComments=3

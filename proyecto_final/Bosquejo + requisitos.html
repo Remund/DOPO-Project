@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Boceto - The DOPO Hardest Game</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', monospace; }
+  body { background: #f0f0f0; padding: 20px; }
+
+  h1 { text-align: center; margin-bottom: 30px; font-size: 22px; color: #333; }
+
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .arrow-down { font-size: 24px; color: #555; }
+
+  .screen {
+    border: 3px solid #222;
+    background: white;
+    width: 700px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .screen-title {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .screen-body { padding: 12px; }
+
+  .annotation {
+    font-size: 10px;
+    color: #888;
+    text-align: right;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .menu-header {
+    text-align: center;
+    background: #ddd;
+    padding: 18px;
+    border: 2px dashed #999;
+    margin-bottom: 12px;
+  }
+  .menu-header h2 { font-size: 26px; font-weight: bold; letter-spacing: 2px; }
+  .menu-header p  { font-size: 11px; color: #666; margin-top: 4px; }
+
+  .menu-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .menu-btn {
+    border: 2px solid #333;
+    padding: 14px 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    background: #f9f9f9;
+    border-radius: 3px;
+  }
+
+  .mode-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .mode-card {
+    border: 2px solid #333;
+    padding: 12px 6px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    background: #f9f9f9;
+    border-radius: 3px;
+  }
+  .mode-card span {
+    display: block;
+    font-size: 10px;
+    font-weight: normal;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .char-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .char-card {
+    border: 2px solid #333;
+    padding: 10px;
+    text-align: center;
+    border-radius: 3px;
+    background: #f9f9f9;
+  }
+  .char-square {
+    width: 50px; height: 50px;
+    margin: 0 auto 8px auto;
+    border: 3px solid #222;
+  }
+  .char-card p    { font-size: 11px; font-weight: bold; }
+  .char-card span { font-size: 10px; color: #666; }
+  .red-sq   { background: #e74c3c; }
+  .blue-sq  { background: #3498db; width: 60px; height: 60px; }
+  .green-sq { background: #2ecc71; }
+
+  .border-selector {
+    border: 2px dashed #999;
+    padding: 8px;
+    margin-top: 8px;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+  }
+
+  .level-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .level-item {
+    border: 2px solid #333;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    background: #f9f9f9;
+    border-radius: 3px;
+  }
+  .level-item span { color: #888; font-size: 11px; }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .nav-btn {
+    border: 2px solid #333;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #222;
+    color: white;
+    border-radius: 3px;
+  }
+  .nav-btn-sec {
+    border: 2px solid #333;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #f9f9f9;
+    border-radius: 3px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .pause-overlay {
+    background: rgba(0,0,0,0.10);
+    border: 3px solid #333;
+    padding: 20px;
+    text-align: center;
+  }
+  .pause-title { font-size: 28px; font-weight: bold; margin-bottom: 16px; letter-spacing: 3px; }
+  .pause-buttons { display: flex; flex-direction: column; gap: 8px; width: 200px; margin: 0 auto; }
+  .pause-btn-item {
+    border: 2px solid #333;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    background: white;
+    border-radius: 3px;
+  }
+
+  .result-body { text-align: center; padding: 20px; }
+  .result-title { font-size: 22px; font-weight: bold; margin-bottom: 6px; color: #27ae60; }
+  .result-sub   { font-size: 13px; color: #555; margin-bottom: 16px; }
+  .result-stats {
+    border: 2px solid #ddd;
+    padding: 12px;
+    margin-bottom: 16px;
+    background: #f9f9f9;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  .result-stats p { margin: 4px 0; }
+  .leaderboard-section {
+    border: 2px dashed #999;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 3px;
+  }
+  .leaderboard-section h3 { font-size: 13px; margin-bottom: 10px; }
+  .lb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .lb-table th, .lb-table td {
+    border: 1px solid #ddd;
+    padding: 5px 8px;
+    text-align: left;
+  }
+  .lb-table th { background: #eee; }
+  .name-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+  .fake-input {
+    border: 2px solid #333;
+    padding: 5px 10px;
+    font-size: 12px;
+    width: 150px;
+    font-family: monospace;
+  }
+  .fake-btn {
+    border: 2px solid #333;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #eee;
+    border-radius: 2px;
+  }
+  .result-buttons { display: flex; gap: 10px; justify-content: center; }
+  .result-btn {
+    border: 2px solid #333;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #f9f9f9;
+    border-radius: 3px;
+  }
+
+  /* ================================================================
+     PANTALLA DE JUEGO
+  ================================================================ */
+  .game-window {
+    border: 3px solid #222;
+    background: white;
+    width: 700px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .hud-top {
+    background: #222;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .hud-section { display: flex; align-items: center; gap: 5px; }
+  .coin-badge  { background:#f1c40f; color:#333; font-weight:bold; padding:2px 7px; border-radius:10px; font-size:11px; }
+  .death-badge { background:#e74c3c; color:white; font-weight:bold; padding:2px 7px; border-radius:10px; font-size:11px; }
+  .time-badge  { background:#2ecc71; color:#1a1a1a; font-weight:bold; padding:2px 7px; border-radius:10px; font-size:11px; }
+  .pause-top-btn {
+    background:#333; color:white; border:1px solid #666;
+    padding:3px 9px; font-size:11px; border-radius:2px; font-family:monospace;
+  }
+
+  /* Área de juego: fondo azul/morado = exterior */
+  .game-area {
+    position: relative;
+    width: 700px;
+    height: 340px;
+    background: #7a8fc9;
+    overflow: hidden;
+  }
+
+  /* Zona segura verde */
+  .safe-zone {
+    position: absolute;
+    background: #6dbb6d;
+    border: 2px solid #3a8a3a;
+    z-index: 2;
+  }
+
+  /* Checkpoint: verde más claro con borde punteado */
+  .checkpoint {
+    position: absolute;
+    background: rgba(109,187,109,0.55);
+    border: 3px dashed #3a8a3a;
+    z-index: 2;
+  }
+
+  /* Corredor central: tablero a cuadros blanco/gris */
+  .corridor {
+    position: absolute;
+    background:
+      repeating-conic-gradient(#d8d8d8 0% 25%, #ffffff 0% 50%)
+      0 0 / 18px 18px;
+    border: 2px solid #333;
+    z-index: 1;
+  }
+
+  .player-red {
+    position: absolute;
+    background: #e74c3c;
+    border: 3px solid #fff;
+    z-index: 6;
+  }
+  .player-blue {
+    position: absolute;
+    background: #3498db;
+    border: 3px solid #f1c40f;
+    z-index: 6;
+  }
+
+  .enemy {
+    position: absolute;
+    background: #2471d4;
+    border-radius: 50%;
+    border: 2px solid #1a3a6e;
+    z-index: 5;
+  }
+
+  .coin {
+    position: absolute;
+    background: #f1c40f;
+    border-radius: 50%;
+    border: 1.5px solid #b7950b;
+    z-index: 4;
+  }
+  .coin.skin {
+    background: #e74c3c;
+    border-color: #922b21;
+  }
+
+  /* Bomba: negra con ✕ rojo */
+  .bomb {
+    position: absolute;
+    background: #111;
+    border-radius: 50%;
+    border: 2px solid #e74c3c;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  /* Fuente de vida: blanca con ♥ rojo */
+  .lifesource {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    border: 2px solid #e74c3c;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  /* HUD inferior */
+  .hud-bottom {
+    background: #222;
+    color: white;
+    padding: 7px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-top: 2px solid #555;
+  }
+  .legend { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 4px; color: #ccc; font-size: 10px; }
+  .leg-sq     { width:11px; height:11px; border:1px solid rgba(255,255,255,0.4); flex-shrink:0; }
+  .leg-circle { width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,0.4); flex-shrink:0; }
+  .controls-hint { font-size: 10px; color: #888; }
+</style>
+</head>
+<body>
+
+<h1>📐 Boceto de Interfaz — The DOPO Hardest Game</h1>
+
+<div class="flow">
+
+<!-- ══════════════════════════════════════
+     1. MENÚ PRINCIPAL
+══════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-title">1. MENÚ PRINCIPAL — FlowLayout</div>
+  <div class="screen-body">
+    <div class="menu-header">
+      <h2>THE DOPO HARDEST GAME</h2>
+      <p>JLabel: Título</p>
+    </div>
+    <div class="section-label">Botones principales — GridLayout 3×1</div>
+    <div class="menu-buttons">
+      <div class="menu-btn">🎮 Jugar</div>
+      <div class="menu-btn">🏆 Leaderboard</div>
+      <div class="menu-btn">📂 Abrir partida</div>
+    </div>
+    <div class="annotation">JButton × 3</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓ click "Jugar"</div>
+
+<!-- ══════════════════════════════════════
+     2. SELECCIÓN MODO
+══════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-title">2. SELECCIÓN DE MODO — FlowLayout</div>
+  <div class="screen-body">
+    <div class="section-label">Elige tu modalidad de juego</div>
+    <div class="mode-options">
+      <div class="mode-card">👤 PLAYER<span>1 jugador controla el cuadrado</span></div>
+      <div class="mode-card">👥 PLAYER vs PLAYER<span>2 jugadores, sentidos opuestos</span></div>
+      <div class="mode-card">🤖 PLAYER vs MACHINE<span>Contra IA Aleatoria o Experta</span></div>
+    </div>
+    <div class="nav-buttons">
+      <div class="nav-btn-sec">← Volver</div>
+      <div class="nav-btn">Siguiente →</div>
+    </div>
+    <div class="annotation">JRadioButton o JButton × 3</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓ seleccionar modo</div>
+
+<!-- ══════════════════════════════════════
+     3. SELECCIÓN PERSONAJE
+══════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-title">3. SELECCIÓN DE PERSONAJE — GridLayout</div>
+  <div class="screen-body">
+    <div class="section-label">Elige tu personaje (Jugador 1)</div>
+    <div class="char-options">
+      <div class="char-card">
+        <div class="char-square red-sq"></div>
+        <p>🔴 BLINKY</p>
+        <span>Velocidad: 1x · Tamaño: 1x<br>Sin habilidades especiales</span>
+      </div>
+      <div class="char-card">
+        <div class="char-square blue-sq"></div>
+        <p>🔵 INKY</p>
+        <span>Velocidad: 1.5x · Tamaño: 1.5x<br>Más rápido y grande</span>
+      </div>
+      <div class="char-card">
+        <div class="char-square green-sq"></div>
+        <p>🟢 CLYDE</p>
+        <span>Velocidad: 1x<br>Absorbe 1 golpe → baja a 0.7x</span>
+      </div>
+    </div>
+    <div class="border-selector">
+      🎨 Color de borde (solo PvsP/PvsM): [ ⬜ ] [ 🟡 ] [ 🟣 ] [ 🟠 ]
+      <br><span style="font-size:10px">JComboBox — distingue jugadores del mismo tipo</span>
+    </div>
+    <div class="nav-buttons">
+      <div class="nav-btn-sec">← Volver</div>
+      <div class="nav-btn">Siguiente →</div>
+    </div>
+    <div class="annotation">Si PvsP/PvsM → se repite para Jugador 2</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓ seleccionar personaje</div>
+
+<!-- ══════════════════════════════════════
+     4. SELECCIÓN DE NIVEL
+══════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-title">4. SELECCIÓN DE NIVEL / CONFIGURACIÓN</div>
+  <div class="screen-body">
+    <div class="section-label">Elige una configuración (.txt)</div>
+    <div class="level-list">
+      <div class="level-item">
+        <span>📄 Nivel 1 — Original (The World's Hardest Game)</span>
+        <span>Básico</span>
+      </div>
+      <div class="level-item">
+        <span>📄 Nivel 2 — Laberinto intermedio</span>
+        <span>Medio</span>
+      </div>
+      <div class="level-item">
+        <span>📄 Nivel 3 — Caos total</span>
+        <span>Difícil</span>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <div class="nav-btn-sec">← Volver</div>
+      <div class="nav-btn">¡Jugar!</div>
+    </div>
+    <div class="annotation">JList con archivos .txt disponibles</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓ click "¡Jugar!"</div>
+
+<!-- ══════════════════════════════════════
+     5. PANTALLA DE JUEGO
+══════════════════════════════════════ -->
+<div class="game-window">
+  <div class="screen-title">5. PANTALLA DE JUEGO — BorderLayout</div>
+
+  <!-- HUD top -->
+  <div class="hud-top">
+    <div class="hud-section">☰ MENÚ</div>
+    <div class="hud-section">NIVEL <span style="color:#f1c40f">1 / 3</span></div>
+    <div class="hud-section">⏱ <span class="time-badge">01:24</span></div>
+    <div class="hud-section">💀 <span class="death-badge">2</span></div>
+    <div class="hud-section">🪙 <span class="coin-badge">0 / 10</span></div>
+    <div class="hud-section"><button class="pause-top-btn">⏸ PAUSA</button></div>
+  </div>
+
+  <!-- MAPA: fiel al nivel 1 original -->
+  <div class="game-area">
+
+    <!-- ZONA SEGURA INICIAL (izquierda, vertical) -->
+    <div class="safe-zone"
+         style="left:20px; top:70px; width:110px; height:200px;">
+    </div>
+
+    <!-- CORREDOR CENTRAL (tablero a cuadros) -->
+    <div class="corridor"
+         style="left:130px; top:110px; width:440px; height:120px;">
+    </div>
+
+    <!-- ZONA SEGURA FINAL (derecha, vertical) -->
+    <div class="safe-zone"
+         style="left:570px; top:70px; width:110px; height:200px;">
+    </div>
+
+    <!-- CHECKPOINT en el centro del corredor -->
+    <div class="checkpoint"
+         style="left:305px; top:113px; width:90px; height:114px;">
+    </div>
+
+    <!-- JUGADOR 1 (rojo) en zona inicial -->
+    <div class="player-red"
+         style="left:48px; top:155px; width:22px; height:22px;">
+    </div>
+
+    <!-- JUGADOR 2 (azul, PvsP) también en zona inicial -->
+    <div class="player-blue"
+         style="left:80px; top:155px; width:22px; height:22px;">
+    </div>
+
+    <!-- ENEMIGOS dentro del corredor -->
+    <div class="enemy" style="left:185px; top:135px; width:17px; height:17px;"></div>
+    <div class="enemy" style="left:230px; top:175px; width:17px; height:17px;"></div>
+    <div class="enemy" style="left:270px; top:135px; width:17px; height:17px;"></div>
+    <div class="enemy" style="left:420px; top:175px; width:17px; height:17px;"></div>
+    <div class="enemy" style="left:460px; top:135px; width:17px; height:17px;"></div>
+    <div class="enemy" style="left:500px; top:165px; width:17px; height:17px;"></div>
+
+    <!-- MONEDAS dispersas en el corredor -->
+    <div class="coin" style="left:165px; top:160px; width:12px; height:12px;"></div>
+    <div class="coin" style="left:210px; top:148px; width:12px; height:12px;"></div>
+    <div class="coin" style="left:255px; top:172px; width:12px; height:12px;"></div>
+    <!-- después del checkpoint -->
+    <div class="coin" style="left:415px; top:148px; width:12px; height:12px;"></div>
+    <div class="coin" style="left:450px; top:168px; width:12px; height:12px;"></div>
+    <div class="coin" style="left:490px; top:148px; width:12px; height:12px;"></div>
+    <div class="coin" style="left:530px; top:168px; width:12px; height:12px;"></div>
+
+    <!-- SKIN COIN (roja) -->
+    <div class="coin skin" style="left:350px; top:190px; width:12px; height:12px;"></div>
+
+    <!-- BOMBA (✕ rojo) -->
+    <div class="bomb"
+         style="left:480px; top:195px; width:20px; height:20px;">✕</div>
+
+    <!-- FUENTE DE VIDA (♥ rojo) -->
+    <div class="lifesource"
+         style="left:175px; top:195px; width:20px; height:20px;">♥</div>
+
+  </div><!-- fin game-area -->
+
+  <!-- HUD bottom leyenda -->
+  <div class="hud-bottom">
+    <div class="legend">
+      <div class="legend-item">
+        <div class="leg-sq" style="background:#e74c3c;"></div><span>Jugador 1</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-sq" style="background:#3498db; border-color:#f1c40f;"></div><span>Jugador 2</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-circle" style="background:#2471d4;"></div><span>Enemigo</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-circle" style="background:#f1c40f;"></div><span>Moneda</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-circle" style="background:#e74c3c; border-color:#922b21;"></div><span>Skin coin</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-sq" style="background:#6dbb6d; border-color:#3a8a3a;"></div><span>Zona segura</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-sq" style="background:rgba(109,187,109,0.55); border-color:#3a8a3a;"></div><span>Checkpoint</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-circle" style="background:#111; border-color:#e74c3c;"></div><span>Bomba</span>
+      </div>
+      <div class="legend-item">
+        <div class="leg-circle" style="background:#fff; border-color:#e74c3c;"></div><span>Vida extra</span>
+      </div>
+    </div>
+    <div class="controls-hint">WASD / ↑↓←→ para moverse</div>
+  </div>
+
+</div><!-- fin game-window -->
+
+<div class="arrow-down">↓ ESC / botón pausa</div>
+
+<!-- ══════════════════════════════════════
+     6. PANTALLA DE PAUSA
+══════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-title">6. PANTALLA DE PAUSA — JDialog modal</div>
+  <div class="screen-body">
+    <div class="pause-overlay">
+      <div class="pause-title">⏸ PAUSA</div>
+      <div class="pause-buttons">
+        <div class="pause-btn-item">▶ Continuar</div>
+        <div class="pause-btn-item">💾 Guardar partida</div>
+        <div class="pause-btn-item">🔁 Reiniciar nivel</div>
+        <div class="pause-btn-item">🏠 Menú principal</div>
+      </div>
+    </div>
+    <div class="annotation">JDialog modal sobre GamePanel</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓ nivel completado</div>
+
+<!-- ══════════════════════════════════════
+     7. PANTALLA DE RESULTADO
+══════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-title">7. PANTALLA DE RESULTADO — FlowLayout con JSeparator</div>
+  <div class="screen-body">
+    <div class="result-body">
+      <div class="result-title">🏆 ¡Nivel Completado!</div>
+      <div class="result-sub">Superaste todos los obstáculos</div>
+
+      <div class="result-stats">
+        <p>💀 Muertes totales: <strong>5</strong></p>
+        <p>🪙 Monedas recolectadas: <strong>10 / 10</strong></p>
+        <p>⏱ Tiempo restante: <strong>00:42</strong></p>
+      </div>
+
+      <div class="leaderboard-section">
+        <h3>🏅 LEADERBOARD</h3>
+        <table class="lb-table">
+          <tr><th>#</th><th>Nombre</th><th>Muertes</th><th>Tiempo</th></tr>
+          <tr><td>1</td><td>PlayerOne</td><td>2</td><td>01:10</td></tr>
+          <tr><td>2</td><td>PlayerTwo</td><td>4</td><td>01:05</td></tr>
+          <tr><td>3</td><td>PlayerThree</td><td>7</td><td>00:58</td></tr>
+        </table>
+        <div class="name-input-row">
+          <span>Tu nombre:</span>
+          <input class="fake-input" type="text" placeholder="Escribe aquí...">
+          <div class="fake-btn">Registrar</div>
+        </div>
+      </div>
+
+      <div class="result-buttons">
+        <div class="result-btn">▶ Siguiente nivel</div>
+        <div class="result-btn">🔁 Reintentar</div>
+        <div class="result-btn">🏠 Menú principal</div>
+      </div>
+    </div>
+    <div class="annotation">JTable · JTextField · JButton · JLabel</div>
+  </div>
+</div>
+
+</div><!-- fin flow -->
+</body>
+</html>
